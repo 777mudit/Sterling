@@ -1,4 +1,3 @@
-
 import { defineType, defineField, defineArrayMember } from 'sanity';
 
 export const productVariant = defineType({
@@ -51,7 +50,7 @@ export const product = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Product family name', 
+      title: 'Product family name',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -70,10 +69,10 @@ export const product = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'MRP',
+      name: 'mrp',
       title: 'MRP (INR)',
-      type: 'number',
-      validation: (Rule) => Rule.min(0),
+      type: 'string',
+      description: 'Enter a single price or range, e.g. ₹1,500 - ₹3,000',
     }),
     defineField({ name: 'shortDescription', title: 'Short description', type: 'string' }),
     defineField({ name: 'description', title: 'Product description', type: 'text', rows: 4 }),
@@ -102,6 +101,7 @@ export const product = defineType({
       title: 'Variants (size / finish / SKU)',
       type: 'array',
       of: [defineArrayMember({ type: 'productVariant' })],
+      hidden: true,
     }),
     defineField({
       name: 'cataloguePages',
@@ -137,12 +137,13 @@ export const product = defineType({
   preview: {
     select: {
       title: 'title',
+      mrp: 'mrp',
       media: 'images.0',
     },
-    prepare({ title, media }) {
+    prepare({ title, mrp, media }) {
       return {
         title,
-        subtitle: 'Product',
+        subtitle: mrp ? `MRP ${mrp}` : 'Product',
         media,
       };
     },
